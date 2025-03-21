@@ -104,4 +104,8 @@ class NotificationService {
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
     );
   }
+
+  Future<void> cancelScheduleNotification({required int id}) async {
+    await flutterLocalNotificationsPlugin.cancel(id);
+  }
 }

@@ -16,11 +16,12 @@ class TaskListScreen extends StatefulWidget {
 
 class _TaskListScreenState extends State<TaskListScreen> {
   bool _showIncompleteOnly = false;
+  late NotificationService _notificationService;
   @override
   void initState() {
-    final notificationService = NotificationService();
+    _notificationService = NotificationService();
     if (context.mounted) {
-      notificationService.init(context);
+      _notificationService.init(context);
     }
     super.initState();
   }
@@ -57,7 +58,12 @@ class _TaskListScreenState extends State<TaskListScreen> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => TaskDetailScreen()),
+                MaterialPageRoute(
+                  builder:
+                      (context) => TaskDetailScreen(
+                        notificationService: _notificationService,
+                      ),
+                ),
               );
             },
           ),
@@ -66,7 +72,12 @@ class _TaskListScreenState extends State<TaskListScreen> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const SearchScreen()),
+                MaterialPageRoute(
+                  builder:
+                      (context) => SearchScreen(
+                        notificationService: _notificationService,
+                      ),
+                ),
               );
             },
           ),
@@ -88,7 +99,11 @@ class _TaskListScreenState extends State<TaskListScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => TaskDetailScreen(task: task),
+                      builder:
+                          (context) => TaskDetailScreen(
+                            task: task,
+                            notificationService: _notificationService,
+                          ),
                     ),
                   );
                 },

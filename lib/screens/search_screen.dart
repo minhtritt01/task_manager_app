@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/task_provider.dart';
+import '../services/notification_service.dart';
 import '../widgets/task_item.dart';
 import 'task_detail_screen.dart';
 
 class SearchScreen extends StatefulWidget {
-  const SearchScreen({super.key});
-
+  const SearchScreen({super.key, required this.notificationService});
+  final NotificationService notificationService;
   @override
   State<SearchScreen> createState() => _SearchScreenState();
 }
@@ -60,7 +61,11 @@ class _SearchScreenState extends State<SearchScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => TaskDetailScreen(task: task),
+                      builder:
+                          (context) => TaskDetailScreen(
+                            task: task,
+                            notificationService: widget.notificationService,
+                          ),
                     ),
                   );
                 },

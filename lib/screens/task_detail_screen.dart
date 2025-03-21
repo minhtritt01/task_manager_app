@@ -10,8 +10,12 @@ import '../services/notification_service.dart';
 
 class TaskDetailScreen extends StatefulWidget {
   final Task? task;
-
-  const TaskDetailScreen({super.key, this.task});
+  final NotificationService notificationService;
+  const TaskDetailScreen({
+    super.key,
+    this.task,
+    required this.notificationService,
+  });
 
   @override
   _TaskDetailScreenState createState() => _TaskDetailScreenState();
@@ -70,17 +74,17 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                 : DateTime.now()
                     .toIso8601String(), // only set updatedAt when the task is updated
       );
-
+      int id = 0;
       if (widget.task == null) {
-        taskProvider.addTask(newTask);
+        id = await taskProvider.addTask(newTask);
         _showSnackBar('Task added successfully');
       } else {
-        taskProvider.updateTask(newTask);
+        id = await taskProvider.updateTask(newTask);
         _showSnackBar('Task updated successfully');
       }
       final notificationService = NotificationService();
       await notificationService.scheduleNotification(
-        id: newTask.id ?? 0, // Sử dụng ID của công việc làm ID thông báo
+        id: id, // Sử dụng ID của công việc làm ID thông báo
         title: 'Task Due: ${newTask.title}',
         body: 'Your task "${newTask.title}" is due today!',
         dueDate: _dueDate!,
@@ -113,7 +117,8 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
     );
 
     if (confirmed == true) {
-      await taskProvider.deleteTask(widget.task!.id!);
+      int id = await taskProvider.deleteTask(widget.task!.id!);
+      await widget.notificationService.cancelScheduleNotification(id: id);
       _showSnackBar('Task deleted successfully');
       if (mounted) {
         Navigator.pop(context);

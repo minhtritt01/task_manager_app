@@ -26,22 +26,25 @@ class TaskProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> addTask(Task task) async {
+  Future<int> addTask(Task task) async {
     final dbHelper = DatabaseHelper();
-    await dbHelper.insertTask(task.toMap());
+    int id = await dbHelper.insertTask(task.toMap());
     await loadTasks();
+    return id;
   }
 
-  Future<void> updateTask(Task task) async {
+  Future<int> updateTask(Task task) async {
     final dbHelper = DatabaseHelper();
-    await dbHelper.updateTask(task.toMap());
+    int id = await dbHelper.updateTask(task.toMap());
     await loadTasks();
+    return id;
   }
 
-  Future<void> deleteTask(int id) async {
+  Future<int> deleteTask(int id) async {
     final dbHelper = DatabaseHelper();
     await dbHelper.deleteTask(id);
     await loadTasks();
+    return id;
   }
 
   void searchTasks(String keyword) {

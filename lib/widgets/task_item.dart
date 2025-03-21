@@ -19,7 +19,7 @@ class TaskItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final dateFormat = DateFormat(datetime);
     final dueDate =
-        'Due date: ${dateFormat.format(DateTime.tryParse(task.updatedAt) ?? DateTime.now())}';
+        'Due date: ${dateFormat.format(DateTime.tryParse(task.dueDate) ?? DateTime.now())}';
 
     return Card(
       elevation: 4,
