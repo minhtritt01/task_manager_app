@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:task_manager_app/providers/theme_provider.dart';
+import 'package:task_manager_app/widgets/task_list.dart';
 import '../providers/task_provider.dart';
 import '../services/notification_service.dart';
 import 'search_screen.dart';
 import 'task_detail_screen.dart';
-import '../widgets/task_item.dart';
 
 class TaskListScreen extends StatefulWidget {
   const TaskListScreen({super.key});
@@ -85,30 +85,9 @@ class _TaskListScreenState extends State<TaskListScreen> {
       ),
       body: Consumer<TaskProvider>(
         builder: (context, taskProvider, child) {
-          return ListView.builder(
-            itemCount: taskProvider.tasks.length,
-            itemBuilder: (context, index) {
-              final task = taskProvider.tasks[index];
-              return TaskItem(
-                task: task,
-                onCheckboxChanged: (value) {
-                  task.status = value! ? 1 : 0;
-                  taskProvider.updateTask(task);
-                },
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder:
-                          (context) => TaskDetailScreen(
-                            task: task,
-                            notificationService: _notificationService,
-                          ),
-                    ),
-                  );
-                },
-              );
-            },
+          return TaskList(
+            tasks: taskProvider.tasks,
+            notificationService: _notificationService,
           );
         },
       ),
