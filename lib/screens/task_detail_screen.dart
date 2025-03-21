@@ -59,6 +59,10 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
         _showSnackBar('Please select a due date');
         return;
       }
+      if (_dueDate!.isBefore(DateTime.now())) {
+        _showSnackBar('Due date must be in the future');
+        return;
+      }
 
       final taskProvider = Provider.of<TaskProvider>(context, listen: false);
       final newTask = Task(
