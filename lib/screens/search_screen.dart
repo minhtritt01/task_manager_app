@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../widgets/task_list.dart';
 import '../providers/task_provider.dart';
-import '../services/notification_service.dart';
 
 class SearchScreen extends StatefulWidget {
-  const SearchScreen({super.key, required this.notificationService});
-  final NotificationService notificationService;
+  const SearchScreen({super.key});
+
   @override
   State<SearchScreen> createState() => _SearchScreenState();
 }
@@ -46,10 +45,7 @@ class _SearchScreenState extends State<SearchScreen> {
       ),
       body: Consumer<TaskProvider>(
         builder: (context, searchProvider, child) {
-          return TaskList(
-            tasks: searchProvider.tasks,
-            notificationService: widget.notificationService,
-          );
+          return TaskList(tasks: searchProvider.tasks);
         },
       ),
     );

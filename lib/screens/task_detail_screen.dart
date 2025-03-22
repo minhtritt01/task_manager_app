@@ -1,21 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+
 import '../constants/datetime_format.dart';
 import '../models/task.dart';
-
-import 'package:provider/provider.dart';
-import 'package:intl/intl.dart';
-
 import '../providers/task_provider.dart';
-import '../services/notification_service.dart';
 
 class TaskDetailScreen extends StatefulWidget {
   final Task? task;
-  final NotificationService notificationService;
-  const TaskDetailScreen({
-    super.key,
-    this.task,
-    required this.notificationService,
-  });
+  const TaskDetailScreen({super.key, this.task});
 
   @override
   _TaskDetailScreenState createState() => _TaskDetailScreenState();
@@ -78,21 +71,15 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                 : DateTime.now()
                     .toIso8601String(), // only set updatedAt when the task is updated
       );
-      int id = 0;
+
       if (widget.task == null) {
-        id = await taskProvider.addTask(newTask);
+        await taskProvider.addTask(newTask);
         _showSnackBar('Task added successfully');
       } else {
-        id = await taskProvider.updateTask(newTask);
+        await taskProvider.updateTask(newTask);
         _showSnackBar('Task updated successfully');
       }
-      final notificationService = NotificationService();
-      await notificationService.scheduleNotification(
-        id: id, // Sử dụng ID của công việc làm ID thông báo
-        title: 'Task Due: ${newTask.title}',
-        body: 'Your task "${newTask.title}" is due today!',
-        dueDate: _dueDate!,
-      );
+
       if (mounted) {
         Navigator.pop(context);
       }
@@ -121,8 +108,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
     );
 
     if (confirmed == true) {
-      int id = await taskProvider.deleteTask(widget.task!.id!);
-      await widget.notificationService.cancelScheduleNotification(id: id);
+      await taskProvider.deleteTask(widget.task!.id!);
       _showSnackBar('Task deleted successfully');
       if (mounted) {
         Navigator.pop(context);

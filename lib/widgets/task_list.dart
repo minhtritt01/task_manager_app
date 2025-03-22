@@ -4,18 +4,11 @@ import 'package:task_manager_app/models/task.dart';
 
 import '../providers/task_provider.dart';
 import '../screens/task_detail_screen.dart';
-import '../services/notification_service.dart';
 import 'task_item.dart';
 
 class TaskList extends StatelessWidget {
-  const TaskList({
-    super.key,
-    required this.tasks,
-
-    required this.notificationService,
-  });
+  const TaskList({super.key, required this.tasks});
   final List<Task> tasks;
-  final NotificationService notificationService;
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
@@ -32,11 +25,7 @@ class TaskList extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder:
-                    (context) => TaskDetailScreen(
-                      task: task,
-                      notificationService: notificationService,
-                    ),
+                builder: (context) => TaskDetailScreen(task: task),
               ),
             );
           },

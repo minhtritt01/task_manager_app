@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:task_manager_app/providers/theme_provider.dart';
 import 'package:task_manager_app/widgets/task_list.dart';
 import '../providers/task_provider.dart';
-import '../services/notification_service.dart';
 import 'search_screen.dart';
 import 'task_detail_screen.dart';
 
@@ -16,14 +15,13 @@ class TaskListScreen extends StatefulWidget {
 
 class _TaskListScreenState extends State<TaskListScreen> {
   bool _showIncompleteOnly = false;
-  late NotificationService _notificationService;
+
   @override
   void initState() {
-    _notificationService = NotificationService();
-    if (context.mounted) {
-      _notificationService.init(context);
-    }
     super.initState();
+    // Initialize NotificationService using TaskProvider
+    final taskProvider = Provider.of<TaskProvider>(context, listen: false);
+    taskProvider.initNotificationService(context);
   }
 
   @override
@@ -58,12 +56,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                  builder:
-                      (context) => TaskDetailScreen(
-                        notificationService: _notificationService,
-                      ),
-                ),
+                MaterialPageRoute(builder: (context) => TaskDetailScreen()),
               );
             },
           ),
@@ -72,12 +65,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                  builder:
-                      (context) => SearchScreen(
-                        notificationService: _notificationService,
-                      ),
-                ),
+                MaterialPageRoute(builder: (context) => SearchScreen()),
               );
             },
           ),
@@ -85,10 +73,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
       ),
       body: Consumer<TaskProvider>(
         builder: (context, taskProvider, child) {
-          return TaskList(
-            tasks: taskProvider.tasks,
-            notificationService: _notificationService,
-          );
+          return TaskList(tasks: taskProvider.tasks);
         },
       ),
       floatingActionButton: Consumer<ThemeProvider>(
