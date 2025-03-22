@@ -12,9 +12,8 @@ class TaskProvider with ChangeNotifier {
     _notificationService = NotificationService();
   }
 
-  List<Task> get tasks => _filteredTasks.isNotEmpty ? _filteredTasks : _tasks;
+  List<Task> get tasks => _filteredTasks;
 
-  // Initialize the notification service
   void initNotificationService(BuildContext context) {
     _notificationService.init(context);
   }
@@ -27,7 +26,7 @@ class TaskProvider with ChangeNotifier {
       _filteredTasks = _tasks;
       notifyListeners();
     } catch (error) {
-      rethrow; // Propagate the error to the FutureBuilder
+      rethrow;
     }
   }
 
@@ -56,7 +55,7 @@ class TaskProvider with ChangeNotifier {
 
       return id;
     } catch (error) {
-      return -1; // Return -1 to indicate failure
+      return -1;
     }
   }
 
@@ -71,6 +70,7 @@ class TaskProvider with ChangeNotifier {
       await loadTasks();
 
       final dueDate = DateTime.parse(task.dueDate);
+      // Schedule a notification for the updated task if it's due today in the future and not done
       if (dueDate.isAfter(DateTime.now()) && task.status == 0) {
         await _notificationService.scheduleNotification(
           id: task.id!,
