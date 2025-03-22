@@ -71,8 +71,7 @@ class TaskProvider with ChangeNotifier {
       await loadTasks();
 
       final dueDate = DateTime.parse(task.dueDate);
-      if (dueDate.isAfter(DateTime.now()) && task.status == 1) {
-        // Reschedule the notification for the updated task
+      if (dueDate.isAfter(DateTime.now()) && task.status == 0) {
         await _notificationService.scheduleNotification(
           id: task.id!,
           title: 'Task Due: ${task.title}',
